@@ -1,6 +1,5 @@
-
 import 'bootstrap/dist/css/bootstrap-grid.min.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { paginateArray } from './Pagination';
 import image1 from './img/house-1.jpg';
 import image2 from './img/house-2.jpg';
@@ -10,23 +9,21 @@ import facebookImage from './img/facebook.png';
 import instagramImage from './img/instagram.png';
 
 const Table = ({ data }) => {
-    console.log("asdasdsa", data)
     return (
         <div className="locations">
             {data.map((item) => (
-
-                < div className="parent" onClick="" >
-                    <div className="child" style={{ backgroundImage: 'url(' + item.img + ')' }}>
+                <div className="parent"  onClick="">
+                    <div className="child" style={{ backgroundImage: `url(${item.img})` }}>
                         <a href="#">{item.price}</a>
                         <a href="#">{item.address}</a>
                         <a href="#">{item.url}</a>
                     </div>
                 </div>
-            ))
-            }
-        </div >
+            ))}
+        </div>
     );
 };
+
 
 function SearchBar() {
 
@@ -34,12 +31,12 @@ function SearchBar() {
     const [objectList, setData] = useState([]);
 
     // const [data, setData] = useState([
-    //     { id: 1, name: 'John', img: 'https://cdn.pixabay.com/photo/2016/10/26/19/00/domain-names-1772243_960_720.jpg' },
-    //     { id: 2, name: 'Mary', img: image2 },
-    //     { id: 3, name: 'Jane', img: image3 },
-    //     { id: 4, name: 'Bob', img: image2 },
-    //     { id: 5, name: 'Tom', img: image1 },
-    //     { id: 6, name: 'Henry', img: image3 },
+    //     {id: 1, name: 'John', img: 'https://cdn.pixabay.com/photo/2016/10/26/19/00/domain-names-1772243_960_720.jpg' },
+    //     {id: 2, name: 'Mary', img: image2 },
+    //     {id: 3, name: 'Jane', img: image3 },
+    //     {id: 4, name: 'Bob', img: image2 },
+    //     {id: 5, name: 'Tom', img: image1 },
+    //     {id: 6, name: 'Henry', img: image3 },
     // ]);
 
     const fetchData = async () => {
@@ -65,18 +62,21 @@ function SearchBar() {
                 let img = ""
                 //async download of images from a repository
                 if (i % 2 === 0) {
-                    img = "https://cdn.pixabay.com/photo/2016/10/26/19/00/domain-names-1772243_960_720.jpg)%27"
+                    img = image1
                 } else {
-                    img = "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    img = image2
                 }
 
 
                 const obj = {
+                    i,
                     address,
                     price,
                     url,
                     img
                 };
+
+                console.log("obj img is", obj.img)
 
                 objectList.push(obj);
                 i += 3;
@@ -106,18 +106,32 @@ function SearchBar() {
     const paginatedData = paginateArray(objectList, pageSize, currentPage);
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
+    // const [suggestions, setSuggestions] = useState([]);
+    // const [searchInput, setSearchInput] = useState('');
+
+    const [searchInput, setSearchInput] = useState('');
+    const [searchSuggestions, setSearchSuggestions] = useState([]);
+
+    useEffect(() => {
+        const fetchSearchSuggestions = async () => {
+            if (searchInput.length != 0) {
+                const response = await fetch("http://127.0.0.1:9095/rely/apis/v1/suggestion/${searchInput}")
+                const d = await response.json();
+                console.log(d)
+                // const responseList = JSON.parse(d)
+                // console.log(responseList)
+
+                setSearchSuggestions(d["response"]);
+            }
+        };
+
+        fetchSearchSuggestions();
+    }, [searchInput]);
 
     const handleInputChange = (event) => {
-        const value = event.target.value;
-        setSearchQuery(value);
-
-        // Set the suggestions based on the search query
-        const newSuggestions = ['apple', 'banana'].filter((item) =>
-            item.toLowerCase().includes(value.toLowerCase())
-        );
-        setSuggestions(newSuggestions);
+        setSearchInput(event.target.value);
     };
+
 
     const handleSearch = () => {
         console.log('Search query:', searchQuery);
@@ -130,7 +144,7 @@ function SearchBar() {
 
     const handleBlur = () => {
         // Clear the suggestions when the input loses focus
-        setSuggestions([]);
+        setSearchSuggestions([]);
     };
 
     const totalPages = Math.ceil(objectList.length / 3);
@@ -161,16 +175,16 @@ function SearchBar() {
             </header>
             <div className="center">
                 <input className={"nosubmit"} type="search" placeholder="Search..."
-                    value={searchQuery}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
                 />&nbsp;&nbsp;&nbsp;
-                <button className={"Search"} onClick={() => handleClick(1)}>Search </button>
+                <button className={"Search"} onClick={() => handleClick(searchInput)}>Search </button>
                 <br />
-                {suggestions.length > 0 && (
-                    <div className={"suggestion"}>``
-                        {suggestions.map((suggestion, index) => (
-                            <div key={index}>{suggestion}</div>
+                {searchSuggestions.length > 0 && (
+
+                    <div className={"suggestion"}>
+                        {searchSuggestions.map((suggestion) => (
+                            <div key={suggestion}>{suggestion}</div>
                         ))}
                     </div>
                 )}
