@@ -100,14 +100,11 @@ function SearchBar() {
         fetchData();
         setShowTable(true);
     };
-
-
     const pageSize = 2;
     const paginatedData = paginateArray(objectList, pageSize, currentPage);
 
     const [searchQuery, setSearchQuery] = useState('');
-    // const [suggestions, setSuggestions] = useState([]);
-    // const [searchInput, setSearchInput] = useState('');
+
 
     const [searchInput, setSearchInput] = useState('');
     const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -115,12 +112,14 @@ function SearchBar() {
     useEffect(() => {
         const fetchSearchSuggestions = async () => {
             if (searchInput.length != 0) {
-                const response = await fetch("http://127.0.0.1:9095/rely/apis/v1/suggestion/${searchInput}")
-                const d = await response.json();
-                console.log(d)
-                // const responseList = JSON.parse(d)
-                // console.log(responseList)
+            const s = searchInput
+const url = `http://127.0.0.1:9095/rely/apis/v1/suggestion/${s}`;
+console.log(url);
 
+const response = await fetch(url);
+                // const response = await fetch("http://127.0.0.1:9095/rely/apis/v1/suggestion/${searchInput}")
+                const d = await response.json();
+                console.log("d is",d)
                 setSearchSuggestions(d["response"]);
             }
         };
@@ -142,10 +141,10 @@ function SearchBar() {
         setData(pageData);
     };
 
-    const handleBlur = () => {
-        // Clear the suggestions when the input loses focus
-        setSearchSuggestions([]);
-    };
+    // const handleBlur = () => {
+    //     // Clear the suggestions when the input loses focus
+    //     // setSearchSuggestions([]);
+    // };
 
     const totalPages = Math.ceil(objectList.length / 3);
 
@@ -155,6 +154,11 @@ function SearchBar() {
         setData(pageData);
     };
 
+    const handleSuggestionClick = (suggestion) => {
+        console.log('Suggestion:', suggestion);
+        setSearchInput(suggestion);
+        setSearchSuggestions([]);
+      };
     return (
         <div>
             <header>
@@ -174,20 +178,19 @@ function SearchBar() {
                 </div>
             </header>
             <div className="center">
-                <input className={"nosubmit"} type="search" placeholder="Search..."
+                <input className={"nosubmit"} type="search" value={searchInput} placeholder="Search..."
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
+                    // onBlur={handleBlur} //this is taken care by handleSuggestionClick.
                 />&nbsp;&nbsp;&nbsp;
                 <button className={"Search"} onClick={() => handleClick(searchInput)}>Search </button>
                 <br />
-                {searchSuggestions.length > 0 && (
-
-                    <div className={"suggestion"}>
-                        {searchSuggestions.map((suggestion) => (
-                            <div key={suggestion}>{suggestion}</div>
-                        ))}
-                    </div>
-                )}
+                  {searchSuggestions && searchSuggestions.length > 0 && (
+    <div className={"suggestion"}>
+      {searchSuggestions.map((suggestion) => (
+        <div key={suggestion} onClick={() => handleSuggestionClick(suggestion)} >{suggestion} </div>
+      ))}
+    </div>
+  )}
             </div>
             {showTable && <Table data={paginatedData} />}
 
