@@ -2,7 +2,7 @@ import React from 'react';
 
 
 
-const Sb = ({ searchInput, setSearchInput, searchSuggestions, setSearchSuggestions, handleClick, handleSuggestionClick,handleInputChange }) => {
+const Suggestion = ({ searchInput, setSearchInput, searchSuggestions, setSearchSuggestions, handleClick, handleSuggestionClick,handleInputChange }) => {
     return(
 
 <div className="center">
@@ -22,4 +22,4 @@ const Sb = ({ searchInput, setSearchInput, searchSuggestions, setSearchSuggestio
 </div>
     )
 };
-export default Sb;
+export default Suggestion;
