@@ -7,6 +7,9 @@ import image3 from './img/house-3.jpg'
 import twitterImage from './img/twitter.png';
 import facebookImage from './img/facebook.png';
 import instagramImage from './img/instagram.png';
+import { fetchData, fetchSearchSuggestions  } from './Suggestions';
+import Sb from './ui_elements/SearchBar';
+import Header from './ui_elements/Header';
 
 const Table = ({ data }) => {
     return (
@@ -29,6 +32,13 @@ function SearchBar() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [objectList, setData] = useState([]);
+    const pageSize = 2;
+    const paginatedData = paginateArray(objectList, pageSize, currentPage);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchInput, setSearchInput] = useState('');
+    const [searchSuggestions, setSearchSuggestions] = useState([]);
+    const totalPages = Math.ceil(objectList.length / 3);
+
 
     // const [data, setData] = useState([
     //     {id: 1, name: 'John', img: 'https://cdn.pixabay.com/photo/2016/10/26/19/00/domain-names-1772243_960_720.jpg' },
@@ -39,93 +49,18 @@ function SearchBar() {
     //     {id: 6, name: 'Henry', img: image3 },
     // ]);
 
-    const fetchData = async () => {
-        try {
-            let i = 0;
-            // move to config!
-            const response = await fetch("http://127.0.0.1:9095/rely/apis/v1/dataset/sanfrancisco?pno=1")
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const d = await response.json();
-            const data = d.response
-                .replace(/\[b'/g, '["')
-                .replace(/'\]/g, '"]')
-                .replace(/',\s*b'/g, '", "')
-                .replace(/\\'/g, "'");
-            const responseList = JSON.parse(data)
-
-            while (responseList.length - i >= 3) {
-                const address = responseList[i].split(':')[1];
-                const price = responseList[i + 1].split(':')[1];
-                const url = responseList[i + 2].substring(responseList[i + 2].indexOf(':') + 1);
-                let img = ""
-                //async download of images from a repository
-                if (i % 2 === 0) {
-                    img = image1
-                } else {
-                    img = image2
-                }
-
-
-                const obj = {
-                    i,
-                    address,
-                    price,
-                    url,
-                    img
-                };
-
-                console.log("obj img is", obj.img)
-
-                objectList.push(obj);
-                i += 3;
-            }
-            console.log("obj is", objectList)
-            setData(objectList);
-
-            // setShowTable(true);
-        } catch (error) {
-            console.error("Error:", error);
-            // handle error here
-        }
-    };
-
-
-
     const [showTable, setShowTable] = useState(false);
 
-    const handleClick = (pageNumber) => {
+    const handleClick = async (pageNumber) => {
         setCurrentPage(pageNumber);
-        fetchData();
+        const objectList = await fetchData();
         setShowTable(true);
-    };
-    const pageSize = 2;
-    const paginatedData = paginateArray(objectList, pageSize, currentPage);
-
-    const [searchQuery, setSearchQuery] = useState('');
+      };
 
 
-    const [searchInput, setSearchInput] = useState('');
-    const [searchSuggestions, setSearchSuggestions] = useState([]);
-
-    useEffect(() => {
-        const fetchSearchSuggestions = async () => {
-            if (searchInput.length != 0) {
-            const s = searchInput
-const url = `http://127.0.0.1:9095/rely/apis/v1/suggestion/${s}`;
-console.log(url);
-
-const response = await fetch(url);
-                // const response = await fetch("http://127.0.0.1:9095/rely/apis/v1/suggestion/${searchInput}")
-                const d = await response.json();
-                console.log("d is",d)
-                setSearchSuggestions(d["response"]);
-            }
-        };
-
-        fetchSearchSuggestions();
-    }, [searchInput]);
+useEffect(() => {
+    fetchSearchSuggestions(searchInput, setSearchSuggestions);
+  }, [searchInput]);
 
     const handleInputChange = (event) => {
         setSearchInput(event.target.value);
@@ -146,7 +81,6 @@ const response = await fetch(url);
     //     // setSearchSuggestions([]);
     // };
 
-    const totalPages = Math.ceil(objectList.length / 3);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -159,24 +93,29 @@ const response = await fetch(url);
         setSearchInput(suggestion);
         setSearchSuggestions([]);
       };
+
+      
     return (
         <div>
-            <header>
-                <div className="header">
-                    <a href="#" className="logo">
-                    </a>
-                    <a href="#" className="name" style={{ fontFamily: "Brush Script MT", fontSize: "30px" }}>Rely</a>
-                    <div className="header-right">
-
-                        <a href="#" className="onHover">Home</a>
-                        <a href="#" className="onHover">About</a>
-                        <a href="#" className="onHover">Login</a>
-                        <a href="#" className="onHover">Register</a>
-                        <a href="#" className="onHover">Location</a>
-
-                    </div>
+                <div>
+                    <Header />
                 </div>
-            </header>
+
+        <div>
+        <Sb
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            searchSuggestions={searchSuggestions}
+            setSearchSuggestions={setSearchSuggestions}
+            handleClick={handleClick}
+            handleSuggestionClick={handleSuggestionClick}
+            handleInputChange={handleInputChange}
+        />
+        
+        </div>
+
+
+
             <div className="center">
                 <input className={"nosubmit"} type="search" value={searchInput} placeholder="Search..."
                     onChange={handleInputChange}
