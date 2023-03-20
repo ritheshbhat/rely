@@ -66,11 +66,13 @@ a {
 }
 
 .footer {
+  position: absolute;
   background-color: beige;
   height: 40px;
   width: 100%;
   margin-top: 580px;
   display: block;
+
 }
 .footer-left p {
   /*font-family: "mistral";*/
@@ -101,75 +103,160 @@ a {
   border-radius: 10px;
   box-shadow: black;
 }
-.locations {
-  padding: 00px 50px;
-  max-width: 1200px;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 186px;
+div.gallery {
+  /*border: 1px solid #ccc;*/
+
 }
-.parent {
-  width: 45%;
-  margin: 20px;
-  height: 300px;
-  border: 1px solid black;
-  border-radius: 15px;
-  overflow: hidden;
-  /*position: relative;*/
-  float: left;
-  display: inline-block;
-  cursor: pointer;
-}
-.child {
-  height: 100%;
+
+/*div.gallery:hover {*/
+/*  border: 1px solid #777;*/
+/*}*/
+
+div.gallery img {
   width: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
+  height: auto;
   -webkit-transition: all .5s;
   -moz-transition: all .5s;
   -o-transition: all .5s;
   transition: all .5s;
+  transition: transform .2s;
   border-radius: 10px;
+
+
 }
-.child::before {
-  content: "";
-  display: none;
-  height: 100%;
+div.gallery img:hover,div.gallery img:focus{
+  transform: scale(1.1);
+
+}
+
+div.desc {
   width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(52, 73, 94, 0.75);
+  height: auto;
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  -o-transition: all .5s;
+  transition: all .5s;
+  transition: transform .2s;
   border-radius: 10px;
-}
-.parent:hover .child,
-.parent:focus .child {
-  transform: scale(1.2);
+  background-color: white;
+  padding: 7px;
+
+
+  /* padding: 7px;
+  text-align: center;
+  background-color: white;
+ font-family:"Lucida Fax";
+  text-align: left;
+  border-radius: 10px;
+  width: 108.99%;
+  height: 58px;
+  border: 1px solid white; */
 }
 
-.parent:hover .child:before,
-.parent:focus .child:before {
-  display: block;
+* {
+  box-sizing: border-box;
 }
 
- .right {float: right;}
+.responsive {
+  padding: 124px 145px;
+  /*margin-left: 20px;*/
+  float: left;
+  width: 48.99999%;
+  border-radius: 10px;
+
+}
+.desc {
+
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+
+
+/*.locations {*/
+/*  padding: 00px 50px;*/
+/*  max-width: 1200px;*/
+/*  text-align: center;*/
+/*  margin-left: auto;*/
+/*  margin-right: auto;*/
+/*  margin-top: 186px;*/
+/*}*/
+/*.parent {*/
+/*  width: 45%;*/
+/*  margin: 20px;*/
+/*  height: 300px;*/
+/*  border: 1px solid black;*/
+/*  border-radius: 15px;*/
+/*  overflow: hidden;*/
+/*  !*position: relative;*!*/
+/*  float: left;*/
+/*  display: inline-block;*/
+/*  cursor: pointer;*/
+/*}*/
+/*.child {*/
+/*  height: 100%;*/
+/*  width: 100%;*/
+/*  background-size: cover;*/
+/*  background-repeat: no-repeat;*/
+/*  -webkit-transition: all .5s;*/
+/*  -moz-transition: all .5s;*/
+/*  -o-transition: all .5s;*/
+/*  transition: all .5s;*/
+/*  border-radius: 10px;*/
+/*}*/
+/*.child::before {*/
+/*  content: "";*/
+/*  display: none;*/
+/*  height: 100%;*/
+/*  width: 100%;*/
+/*  position: absolute;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  background-color: rgba(52, 73, 94, 0.75);*/
+/*  border-radius: 10px;*/
+/*}*/
+/*.parent:hover .child,*/
+/*.parent:focus .child {*/
+/*  transform: scale(1.2);*/
+/*}*/
+
+/*.parent:hover .child:before,*/
+/*.parent:focus .child:before {*/
+/*  display: block;*/
+/*}*/
+
+/* .right {float: right;}*/
 
 .suggestion{
   margin-left: -115px;
   margin-right: 94px;
   margin-bottom: 1px;
   padding-top: 15px;
-  background-color: beige;
+  background-color: white;
   border-collapse: collapse;
   border-radius: 5px;
   font-weight: 500;
 
 
-}
-.suggestion .suggestionDropdown :hover, .suggestion .suggestionDropdown :focus
-{
-  background-color: lightgray;
 }
 
 input.nosubmit {
@@ -187,6 +274,19 @@ input.nosubmit {
 input.nosubmit:hover{
   transform: scale(1.1);
 
+}
+.footerImage {
+  position: relative;
+  bottom: 50px;
+  top:260px;
+  color: black;
+  font-weight: bold;
+  background-color: white;
+  opacity: 100;
+  text-align: left;
+  padding-left: 50px;
+  /*padding-right: 50px;*/
+  /*padding-bottom: 50px;*/
 }
 .Prev{
   position:absolute;

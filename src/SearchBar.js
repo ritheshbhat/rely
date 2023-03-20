@@ -4,22 +4,64 @@ import { paginateArray } from './Pagination'
 import { fetchData, fetchSearchSuggestions } from './Suggestions'
 import Footer from './ui_elements/Footers'
 import Header from './ui_elements/Header'
-import Search from './ui_elements/Search'
 import Suggestion from './ui_elements/Suggestions'
 import 'bootstrap/dist/css/bootstrap-grid.min.css'
 
+// const Table = ({ data }) => {
+//   return (
+//     <div className='locations'>
+//       {data.map(item => (
+//         <div className='parent' onClick=''>
+//           <div
+//             className='child'
+//             style={{ backgroundImage: `url(${item.img})` }}
+//           >
+//             <a href='#'>{item.price}</a>
+//             <a href='#'>{item.address}</a>
+//             <a href='#'>{item.link}</a>
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   )
+// }
+
 const Table = ({ data }) => {
   return (
-    <div className='locations'>
+    // <div className='locations'>
+    //   {data.map(item => (
+    //     <div className='parent' onClick=''>
+    //       <div
+    //         className='child'
+    //         style={{ backgroundImage: 'url(' + item.img + ')' }}
+    //       >
+    //         <div className={'footerImage'}>
+    //           <a href='#'>{item.name}</a>
+    //           <br />
+    //           <a href='#'>{item.address}</a>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   ))}
+    // </div>
+    <div>
       {data.map(item => (
-        <div className='parent' onClick=''>
-          <div
-            className='child'
-            style={{ backgroundImage: `url(${item.img})` }}
-          >
-            <a href='#'>{item.price}</a>
-            <a href='#'>{item.address}</a>
-            <a href='#'>{item.url}</a>
+        <div>
+          <div className='responsive'>
+            <div className='gallery'>
+              <a>
+                <img src={item.img} style={{ width: 500, height: 300 }} />
+              </a>
+              <div className='desc'>
+                <div style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                  {item.price}
+                </div>
+                <div style={{ fontSize: '12px' }}>{item.zipcode}</div>
+                <div style={{ fontSize: '11px', wordWrap: 'break-word' }}>
+                  {item.address}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ))}
@@ -40,14 +82,11 @@ function SearchBar () {
   const handleClick = async (pageNumber, searchInput) => {
     console.log('pno, si', pageNumber, searchInput)
     setCurrentPage(pageNumber)
-    const objectList = await fetchData(searchInput)
+    const d = await fetchData(searchInput)
+    objectList.push(d)
+    setData(objectList)
 
     setShowTable(true)
-    //     if (showTable) {
-    //   return (
-    //     <Table objectList={[objectList]} />
-    //   )
-    // }
   }
 
   useEffect(() => {
@@ -57,20 +96,10 @@ function SearchBar () {
   const handleInputChange = event => {
     setSearchInput(event.target.value)
   }
-
-  const handleSearch = () => {
-    console.log('Search query:', searchQuery)
-    // Perform search functionality here
-    const pageData = objectList.slice((currentPage - 1) * 3, currentPage * 3)
-    // Perform search functionality here
-    // console.log('Page data:', pageData)
-    setData(pageData)
+  const handleBlur = () => {
+    // Clear the suggestions when the input loses focus
+    setSearchSuggestions([])
   }
-
-  // const handleBlur = () => {
-  //     // Clear the suggestions when the input loses focus
-  //     // setSearchSuggestions([]);
-  // };
 
   const handlePageChange = page => {
     setCurrentPage(page)
@@ -93,15 +122,9 @@ function SearchBar () {
         searchSuggestions={searchSuggestions}
         setSearchSuggestions={setSearchSuggestions}
         handleClick={handleClick}
+        handleBlur={handleBlur}
         handleSuggestionClick={handleSuggestionClick}
         handleInputChange={handleInputChange}
-      />
-      <Search
-        searchInput={searchInput}
-        handleInputChange={handleInputChange}
-        handleClick={handleClick}
-        searchSuggestions={searchSuggestions}
-        handleSuggestionClick={handleSuggestionClick}
       />
       {showTable && <Table data={paginatedData} />}
       <br />

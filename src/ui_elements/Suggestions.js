@@ -7,7 +7,8 @@ const Suggestion = ({
   setSearchSuggestions,
   handleClick,
   handleSuggestionClick,
-  handleInputChange
+  handleInputChange,
+  handleBlur
 }) => {
   return (
     <div className='center'>
@@ -31,6 +32,7 @@ const Suggestion = ({
               className={'suggestionDropdown'}
               key={suggestion}
               onClick={() => handleSuggestionClick(suggestion)}
+              onBlur={handleBlur}
             >
               {suggestion}{' '}
             </div>
