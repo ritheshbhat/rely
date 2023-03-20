@@ -37,10 +37,17 @@ function SearchBar () {
 
   const [showTable, setShowTable] = useState(false)
 
-  const handleClick = async pageNumber => {
+  const handleClick = async (pageNumber, searchInput) => {
+    console.log('pno, si', pageNumber, searchInput)
     setCurrentPage(pageNumber)
-    const objectList = await fetchData()
+    const objectList = await fetchData(searchInput)
+
     setShowTable(true)
+    //     if (showTable) {
+    //   return (
+    //     <Table objectList={[objectList]} />
+    //   )
+    // }
   }
 
   useEffect(() => {
@@ -72,9 +79,9 @@ function SearchBar () {
   }
 
   const handleSuggestionClick = suggestion => {
+    setSearchSuggestions([])
     console.log('Suggestion:', suggestion)
     setSearchInput(suggestion)
-    setSearchSuggestions([])
   }
 
   return (
@@ -98,11 +105,17 @@ function SearchBar () {
       />
       {showTable && <Table data={paginatedData} />}
       <br />
-      <button className={'Prev'} onClick={() => handleClick(currentPage - 1)}>
+      <button
+        className={'Prev'}
+        onClick={() => handleClick(currentPage - 1, searchInput)}
+      >
         Prev
       </button>{' '}
       &nbsp;
-      <button className={'Next'} onClick={() => handleClick(currentPage + 1)}>
+      <button
+        className={'Next'}
+        onClick={() => handleClick(currentPage + 1, searchInput)}
+      >
         Next
       </button>
       <Footer />

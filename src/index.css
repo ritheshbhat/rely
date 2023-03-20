@@ -160,12 +160,16 @@ a {
   margin-right: 94px;
   margin-bottom: 1px;
   padding-top: 15px;
-  background-color: white;
+  background-color: beige;
   border-collapse: collapse;
   border-radius: 5px;
   font-weight: 500;
 
 
+}
+.suggestion .suggestionDropdown :hover, .suggestion .suggestionDropdown :focus
+{
+  background-color: lightgray;
 }
 
 input.nosubmit {
