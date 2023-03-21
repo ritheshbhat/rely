@@ -20,11 +20,12 @@ function SearchBar () {
   const [showTable, setShowTable] = useState(false)
 
   const handleClick = async (pageNumber, searchInput) => {
+    // setShowTable(false)
+    setData([])
     console.log('pno, si', pageNumber, searchInput)
     setCurrentPage(pageNumber)
     const response = await fetchData(searchInput, pageNumber)
-    objectList.push(...response)
-    setData(objectList)
+    setData(response)
     setShowTable(true)
   }
 
